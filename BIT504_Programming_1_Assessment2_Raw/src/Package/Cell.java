@@ -18,16 +18,12 @@ public class Cell {
 	//row and column of this cell
 	int row, col;
 	
-	/** Constructor to initialise this cell with the specified row and col */
-	public Cell(int row, int col) {
-		
-		// TODO: Initialise the variables row, col 
-
-		
-		
-		//TODO: call the method that sets the cell content to EMPTY
-		 
-	}
+	/** Constructor to initialize a cell at a specific position with an initial content */
+    public Cell(int row, int col) {
+        this.row = row; // Assign the row index to this cell.
+        this.col = col; // Assign the column index to this cell.
+        this.content = Player.Empty; // Initially, the cell is empty.
+    }
 	
 
 	/** Paint itself on the graphics canvas, given the Graphics context g */ 
