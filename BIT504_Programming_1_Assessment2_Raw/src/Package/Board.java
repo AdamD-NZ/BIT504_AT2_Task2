@@ -1,3 +1,12 @@
+/**
+ * Course: BIT504
+ * Student Name: Adam Donson
+ * Student Number: 5114991
+ * Assessment: BIT504 Programming 1 Assessment 2
+ */
+
+package Package;
+
 import java.awt.*;
 
 public class Board {
@@ -25,8 +34,10 @@ public class Board {
 
 	 /** Return true if it is a draw (i.e., no more EMPTY cells) */ 
 	public boolean isDraw() {
-		 
 		// TODO: Check whether the game has ended in a draw. 
+	    return false;
+		 
+		
 		// Hint: Use a nested loop (see the constructor for an example). Check whether any of the cells content in the board grid are Player.Empty. If they are, it is not a draw.
 		// Hint: Return false if it is not a draw, return true if there are no empty positions left
 		   
