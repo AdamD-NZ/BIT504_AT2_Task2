@@ -32,18 +32,20 @@ public class Board {
 	}
 	
 
-	 /** Return true if it is a draw (i.e., no more EMPTY cells) */ 
+	/** Return true if it is a draw (i.e., no more EMPTY cells) */
 	public boolean isDraw() {
-		// TODO: Check whether the game has ended in a draw. 
-	    return false;
-		 
-		
-		// Hint: Use a nested loop (see the constructor for an example). Check whether any of the cells content in the board grid are Player.Empty. If they are, it is not a draw.
-		// Hint: Return false if it is not a draw, return true if there are no empty positions left
-		   
-		
-
-		
+		// Loop through each cell in the board to check if any cell is empty.
+        // If an empty cell is found, return false because the game is not over.
+	    for (int row = 0; row < GameMain.ROWS; row++) {
+	        for (int col = 0; col < GameMain.COLS; col++) {
+	            // If any cell is empty, it is not a draw
+	            if (cells[row][col].content == Player.Empty) {
+	                return false; // // Found an empty cell, so it's not a draw.
+	            }
+	        }
+	    }
+	    // If no empty cells are found, the board is full, so it's a draw.
+	    return true;
 	}
 	
 	/** Return true if the current player "thePlayer" has won after making their move  */
