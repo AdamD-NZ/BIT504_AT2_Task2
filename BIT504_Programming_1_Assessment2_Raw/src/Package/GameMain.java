@@ -7,111 +7,112 @@
 
 package Package;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.*;
 import javax.swing.*;
+import java.awt.Graphics;
+import java.awt.Font;
+import java.awt.BorderLayout;
+import javax.swing.JFrame;
+import java.awt.Dimension;
 
 
-
+/**
+ * GameMain is the main class for the Tic Tac Toe game.
+ * It extends JPanel to serve as the canvas for drawing the game board 
+ * and implements MouseListener to handle user input through mouse clicks.
+ */
 public class GameMain extends JPanel implements MouseListener{
-	//Constants for game 
-	// number of ROWS by COLS cell constants 
-	public static final int ROWS = 3;     
-	public static final int COLS = 3;  
-	public static final String TITLE = "Tic Tac Toe";
-
-	//constants for dimensions used for drawing
-	//cell width and height
-	public static final int CELL_SIZE = 100;
-	//drawing canvas
-	public static final int CANVAS_WIDTH = CELL_SIZE * COLS;
-	public static final int CANVAS_HEIGHT = CELL_SIZE * ROWS;
-	//Noughts and Crosses are displayed inside a cell, with padding from border
-	public static final int CELL_PADDING = CELL_SIZE / 6;    
-	public static final int SYMBOL_SIZE = CELL_SIZE - CELL_PADDING * 2;    
-	public static final int SYMBOL_STROKE_WIDTH = 8;
-	
-	/*declare game object variables*/
-	// the game board 
-	private Board board;
-	 	 
-	//TODO: create the enumeration for the variable below (GameState currentState)
-	//HINT all of the states you require are shown in the code within GameMain
-	private GameState currentState; 
-	
-	// the current player
-	private Player currentPlayer; 
-	// for displaying game status message
-	private JLabel statusBar;       
-	
-
-	/** Constructor to setup the UI and game components on the panel */
-	public GameMain() {   
+	// Constants for window and game settings
+	private static final String WINDOW_TITLE = "Tic Tac Toe";
+	private static final int WINDOW_WIDTH = 301;
+	private static final int WINDOW_HEIGHT = 351;
 		
-		// TODO: This JPanel fires a MouseEvent on MouseClicked so add required event listener to 'this'.          
+	// Game board dimensions and UI constants
+    public static final int ROWS = 3;
+    public static final int COLS = 3;
+    public static final int CELL_SIZE = 100;
+    public static final int CANVAS_WIDTH = CELL_SIZE * COLS;
+    public static final int CANVAS_HEIGHT = CELL_SIZE * ROWS;
+    public static final int GRID_WIDTH = 8;
+    public static final int GRID_WIDTH_HALF = GRID_WIDTH / 2;
+    public static final int CELL_PADDING = CELL_SIZE / 6;
+    public static final int SYMBOL_SIZE = CELL_SIZE - CELL_PADDING * 2;
+    public static final int SYMBOL_STROKE_WIDTH = 5;
+	
+	
+    // Game objects
+    private Board board; // Game board object
+    private GameState currentState; // Current game state (Playing, Win, Draw, etc.)
+    private Player currentPlayer; // Current player (Cross or Nought)
+    private JLabel statusBar; // Status bar to display game messages
+	
+		
+    /** Constructor to set up the UI and initialize game components. */
+    public GameMain() {
+        // Add mouse listener for handling click events
+        addMouseListener(this);
 	    
-	    
-		// Setup the status bar (JLabel) to display status message       
+        // Initialize and style the status bar for displaying messages    
 		statusBar = new JLabel("         ");       
 		statusBar.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 14));       
 		statusBar.setBorder(BorderFactory.createEmptyBorder(2, 5, 4, 5));       
 		statusBar.setOpaque(true);       
 		statusBar.setBackground(Color.LIGHT_GRAY);  
-		
-		//layout of the panel is in border layout
+				
+		// Set layout and add status bar to the panel
 		setLayout(new BorderLayout());       
 		add(statusBar, BorderLayout.SOUTH);
-		// account for statusBar height in overall height
-		setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT + 30));
-		
+		setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT + 30)); // account for statusBar height in overall height
 		
 		// Initialize the game board and start the game
         board = new Board();
         initGame();
         }
-
 	
+    /** Main method to run the game application. */
 	public static void main(String[] args) {
-		    // Run GUI code in Event Dispatch thread for thread safety.
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-	         public void run() {
-				//create a main window to contain the panel
-				JFrame frame = new JFrame(TITLE);
-				
-				//TODO: create the new GameMain panel and add it to the frame
-						
-				
-				
-				//TODO: set the default close operation of the frame to exit_on_close
-		            
-				
-				frame.pack();             
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-	         }
-		 });
+	    
+		
+		// Run GUI code in the Event Dispatch thread for thread safety
+	    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+	    	public void run() {
+	            // Create the main window (JFrame)
+	            JFrame frame = new JFrame(WINDOW_TITLE); // Use WINDOW_TITLE
+	            GameMain gamePanel = new GameMain();     // Create the game panel
+	            frame.add(gamePanel);                    // Add the panel to the frame
+	            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Closing the JFrame and exit the application
+
+	         // Set window size and center it on the screen
+	            frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Sets the size of the JFrame
+	            frame.setLocationRelativeTo(null); // Center the window on the screen
+	            frame.setVisible(true); // Make the window visible
+	        }
+	    });
 	}
-	/** Custom painting codes on this JPanel */
+	
+	/**
+     * Custom painting method to draw the game board and grid, and update the status bar.
+     * @param g Graphics object for drawing.
+     */
 	public void paintComponent(Graphics g) {
 		//fill background and set colour to white
 		super.paintComponent(g);
 		setBackground(Color.WHITE);
-		//ask the game board to paint itself
-		board.paint(g);
 		
-		//set status bar message
+		// Draw the game board
+	    g.setColor(Color.GRAY); // Draw the grid lines
+		board.paint(g); //ask the game board to paint itself
+		
+		// Update status bar messages based on game state
 		if (currentState == GameState.Playing) {          
 			statusBar.setForeground(Color.BLACK);          
-			if (currentPlayer == Player.Cross) {   
-			
-				//TODO: use the status bar to display the message "X"'s Turn
-
-				
-			} else {    
-				
-				//TODO: use the status bar to display the message "O"'s Turn
-
-				
+			if (currentPlayer == Player.Cross) {
+				statusBar.setForeground(Color.RED);          
+				statusBar.setText("X's Turn"); 	
+			} else {
+				statusBar.setForeground(Color.RED);          
+				statusBar.setText("O's Turn"); 				
 			}       
 			} else if (currentState == GameState.Draw) {          
 				statusBar.setForeground(Color.RED);          
@@ -124,10 +125,10 @@ public class GameMain extends JPanel implements MouseListener{
 				statusBar.setText("'O' Won! Click to play again.");       
 			}
 		}
-		
-	
-	  /** Initialise the game-board contents and the current status of GameState and Player) */
+			
+	    /** Initialize the game by resetting the board and setting initial states. */
 		public void initGame() {
+			// Clear the board
 			for (int row = 0; row < ROWS; ++row) {          
 				for (int col = 0; col < COLS; ++col) {  
 					// all cells empty
@@ -138,49 +139,54 @@ public class GameMain extends JPanel implements MouseListener{
 			 currentPlayer = Player.Cross;
 		}
 		
+		/**
+		 * Checks the game state after each turn to determine if the current player has won or if the game ends in a draw.
+		 * If the current player wins, the GameState is updated to reflect the winner.
+		 * If no winner is found, the isDraw method checks for a draw. Otherwise, the GameState remains as PLAYING.
+		 * 
+		 * @param thePlayer The player making the move.
+		 * @param row The row where the move was made.
+		 * @param col The column where the move was made.
+		 */	     
 		
-		/**After each turn check to see if the current player hasWon by putting their symbol in that position, 
-		 * If they have the GameState is set to won for that player
-		 * If no winner then isDraw is called to see if deadlock, if not GameState stays as PLAYING
-		 *   
-		 */
 		public void updateGame(Player thePlayer, int row, int col) {
-			//check for win after play
-			if(board.hasWon(thePlayer, row, col)) {
-				
-				// TODO: check which player has won and update the currentstate to the appropriate gamestate for the winner
-
-				
-			} else 
-				if (board.isDraw ()) {
-					
-				// TODO: set the currentstate to the draw gamestate
-
-			}
-			//otherwise no change to current state of playing
+		    // Check for win after the player's move
+		    if (board.hasWon(thePlayer, row, col)) {
+		        // Update game state based on the winning player
+		        if (thePlayer == Player.Cross) {
+		            currentState = GameState.Cross_won;
+		        } else {
+		            currentState = GameState.Nought_won;
+		        }
+		    } else if (board.isDraw()) {
+		        // Update game state to draw
+		        currentState = GameState.Draw;
+		    }
 		}
+
+		/**
+		 * Handles mouse click events on the game board.
+		 * If the selected cell is valid and empty, the current player's symbol is added to the cell's content.
+		 * The game state is then updated to check for a win or a draw.
+		 * If the game ends (win or draw), the board is reset for a new game.
+		 * Finally, the canvas is refreshed to display the updated board.
+		 *
+		 * @param e The MouseEvent triggered by a click.
+		 */
+	
+	public void mouseClicked(MouseEvent e) {          
+		int mouseX = e.getX(); // get the X coordinate of where the click event happened         
+		int mouseY = e.getY(); // get the Y coordinate of where the click event happened                       
+		int rowSelected = mouseY / CELL_SIZE; // Get the row clicked        
+		int colSelected = mouseX / CELL_SIZE; // Get the column clicked          			
 		
-				
-	
-		/** Event handler for the mouse click on the JPanel. If selected cell is valid and Empty then current player is added to cell content.
-		 *  UpdateGame is called which will call the methods to check for winner or Draw. if none then GameState remains playing.
-		 *  If win or Draw then call is made to method that resets the game board.  Finally a call is made to refresh the canvas so that new symbol appears*/
-	
-	public void mouseClicked(MouseEvent e) {  
-	    // get the coordinates of where the click event happened            
-		int mouseX = e.getX();             
-		int mouseY = e.getY();             
-		// Get the row and column clicked             
-		int rowSelected = mouseY / CELL_SIZE;             
-		int colSelected = mouseX / CELL_SIZE;               			
-		if (currentState == GameState.Playing) {                
-			if (rowSelected >= 0 && rowSelected < ROWS && colSelected >= 0 && colSelected < COLS && board.cells[rowSelected][colSelected].content == Player.Empty) {
-				// move  
-				board.cells[rowSelected][colSelected].content = currentPlayer; 
-				// update currentState                  
-				updateGame(currentPlayer, rowSelected, colSelected); 
-				// Switch player
-				if (currentPlayer == Player.Cross) {
+		if (currentState == GameState.Playing) { // Check if the game is still in progress          
+			if (rowSelected >= 0 && rowSelected < ROWS && colSelected >= 0 && colSelected < COLS &&
+				board.cells[rowSelected][colSelected].content == Player.Empty) { // Validate the clicked cell 
+				board.cells[rowSelected][colSelected].content = currentPlayer; // Place the player's symbol               
+				updateGame(currentPlayer, rowSelected, colSelected); // Update the game state
+				// Switch the current player
+				if (currentPlayer == Player.Cross) { 
 					currentPlayer =  Player.Nought;
 				}
 				else {
@@ -189,33 +195,19 @@ public class GameMain extends JPanel implements MouseListener{
 			}             
 		} else {        
 			// game over and restart              
-			initGame();            
-		}   
+			initGame(); // Handle game over       
+		}
+		// Redraw the graphics on the UI
+		repaint();
+        }
 		
-		//TODO: redraw the graphics on the UI          
-           
-	}
-		
-	
+	// Unused mouse listener methods retained for potential future use
 	@Override
-	public void mousePressed(MouseEvent e) {
-		//  Auto-generated, event not used
-		
-	}
+	public void mousePressed(MouseEvent e) { }
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		//  Auto-generated, event not used
-		
-	}
+	public void mouseReleased(MouseEvent e) { }
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// Auto-generated,event not used
-		
-	}
+	public void mouseEntered(MouseEvent e) { }	
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// Auto-generated, event not used
-		
-	}
-
+	public void mouseExited(MouseEvent e) { }
 }
